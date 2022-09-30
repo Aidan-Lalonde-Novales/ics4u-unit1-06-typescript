@@ -1,41 +1,87 @@
 /**
- * This program tells you the length
- * required for a board foot.
+ * This program gives you the mean and median
+ * for a set of numbers on a .txt file.
  *
  * By:      Aidan Lalonde-Novales
  * Version: 1.0
- * Since:   2022-09-24
+ * Since:   2022-09-29
  */
 
-import promptSync from 'prompt-sync'
-
-const prompt = promptSync()
+// get arguments
+//
+import { readFileSync } from 'fs'
 
 /**
- * @param {number} width Width of the wood
- * @param {number} height Height of the wood
- * @returns {number} length Length of the wood
+ * This function calculates the mean (average) value of a set.
+ *
+ * @param {Array<number>} numberArray Array containing the set.txt file
+ * @param {number} quantity The amount of numbers in the array
+ * @returns {number} mean The average of all the numbers
  */
-function boardFoot(width: number, height: number): number {
-  const BOARD_FOOT = 144
-  const length = BOARD_FOOT / (width * height)
-  return length
+function meanCalculation(numberArray: number[], quantity: number): number {
+  let mean = 0
+  for (let counter = 0; counter !== quantity; counter++) {
+    mean += numberArray[counter]
+  }
+  mean /= quantity
+  return mean
 }
 
-console.log('This program calculates the required length for a board foot.')
+/**
+ * This function calculates the median (middle number) in a set.
+ *
+ * @param {Array<number>} numberArray Array containing the set.txt file
+ * @param {number} quantity The amount of numbers in the array
+ * @returns {number} median The middle value of all the numbers
+ */
+function medianCalculation(numberArray: number[], quantity: number): number {
+  let median = 0
+  const extra = 0.5
 
-// Input
-const widthString = prompt('Enter the width of the wood (in): ')
-const width = parseFloat(widthString)
-const heightString = prompt('Enter the height of the wood (in): ')
-const height = parseFloat(heightString)
+  const orderedArray = numberArray.sort(function (a, b) {
+    return a - b
+  })
 
-// Process and Output
-if (isNaN(width) || isNaN(height)) {
-  console.log('\nInvalid Input.')
-} else {
-  const length = boardFoot(width, height)
-  console.log(`\nYour wood length should be ${length} inch(es) long.`)
+  if (quantity % 2 === 0) {
+    median = orderedArray[quantity / 2]
+  } else {
+    median =
+      (orderedArray[quantity / 2 + extra] +
+        orderedArray[quantity / 2 - extra]) /
+      2
+  }
+  return median
 }
+
+// Change to desired text file
+const filePath = './set3.txt'
+
+// Constants
+const numberArray = []
+const file = readFileSync(filePath, 'utf8')
+const textArray = file.split(/\r?\n/)
+
+// UNCOMMENT THIS IF YOUR TEXT FILE HAS A BLANK CHAR AT THE END
+// textArray.pop()
+
+console.log('This program calculates the means and media from a txt file.')
+console.log(`The current file being used is ${String(filePath)}.\n`)
+
+// Process
+for (let counter = 0; counter < textArray.length; counter++) {
+  numberArray.push(Number(textArray[counter]))
+}
+const quantity = numberArray.length
+
+// console.log(`${String(numberArray)}`)
+// console.log(`${quantity}`)
+
+// Run Functions
+const mean = meanCalculation(numberArray, quantity)
+const median = medianCalculation(numberArray, quantity)
+
+// Output
+console.log(`The mean is ${String(mean)}.`)
+console.log(`The median is ${String(median)}.`)
 
 console.log('\nDone.')
