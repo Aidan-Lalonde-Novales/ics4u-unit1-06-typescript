@@ -20,7 +20,7 @@ import { readFileSync } from 'fs'
  */
 function meanCalculation(numberArray: number[], quantity: number): number {
   let mean = 0
-  for (let counter = 0; counter !== quantity; counter++) {
+  for (let counter = 0; counter < quantity; counter++) {
     mean += numberArray[counter]
   }
   mean /= quantity
@@ -36,25 +36,21 @@ function meanCalculation(numberArray: number[], quantity: number): number {
  */
 function medianCalculation(numberArray: number[], quantity: number): number {
   let median = 0
-  const extra = 0.5
 
   const orderedArray = numberArray.sort(function (a, b) {
     return a - b
   })
 
   if (quantity % 2 === 0) {
-    median = orderedArray[quantity / 2]
+    median = (orderedArray[quantity / 2] + orderedArray[(quantity - 1) / 2]) / 2
   } else {
-    median =
-      (orderedArray[quantity / 2 + extra] +
-        orderedArray[quantity / 2 - extra]) /
-      2
+    median = orderedArray[(quantity - 1) / 2]
   }
   return median
 }
 
 // Change to desired text file
-const filePath = './set3.txt'
+const filePath = './set2.txt'
 
 // Constants
 const numberArray = []
@@ -72,9 +68,6 @@ for (let counter = 0; counter < textArray.length; counter++) {
   numberArray.push(Number(textArray[counter]))
 }
 const quantity = numberArray.length
-
-// console.log(`${String(numberArray)}`)
-// console.log(`${quantity}`)
 
 // Run Functions
 const mean = meanCalculation(numberArray, quantity)
